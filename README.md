@@ -8,7 +8,7 @@
 
 ## 运行
 
-Windows 用户直接到 [Releases](../../releases) 下载 `Race2026.exe`，双击即玩。它依赖系统的 WebView2 运行时，Win10/11 一般已自带。
+Windows 用户直接到 [Releases](https://github.com/jiimjiim/race2026/releases) 下载 `Race2026.exe`，双击即玩。它依赖系统的 WebView2 运行时，Win10/11 一般已自带。
 
 从源码运行：
 

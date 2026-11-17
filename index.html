@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>汽车赛·世纪 — RACE 2026</title>
+<link rel="icon" href="/favicon.svg" />
+</head>
+<body>
+<div id="desktop">
+  <div id="app" class="win">
+    <div class="titlebar">
+      <span class="appicon"><i></i><i></i><i></i><i></i></span>
+      <span class="title">玉米公司 — 汽车赛·世纪</span>
+      <span class="winbtns"><b>—</b><b>□</b><b class="close">✕</b></span>
+    </div>
+
+    <header class="top">
+      <div class="logo">
+        <img src="/logo-2026.svg" alt="MAIZESOFT /// RACE 2026" class="logo-img" />
+      </div>
+      <nav class="tabs" id="tabs">
+        <button data-tab="info" class="active">信息</button>
+        <button data-tab="factory">工厂</button>
+        <button data-tab="shop">商店</button>
+        <button data-tab="about">关于</button>
+      </nav>
+    </header>
+
+    <div class="statusbar">
+      <span>总资产: <b id="money">2000</b></span>
+      <span id="seasonLabel">2001-2003 草创年代</span>
+      <span class="spacer"></span>
+      <span id="raceCounter">比赛场次: 0 / 54</span>
+    </div>
+
+    <main id="view"></main>
+
+    <footer class="news">
+      <span class="news-label">新闻:</span>
+      <span id="newsText" class="news-text"></span>
+    </footer>
+  </div>
+</div>
+
+<div id="modal" class="hidden"></div>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>

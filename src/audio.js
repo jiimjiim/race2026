@@ -14,7 +14,7 @@ class AudioMan {
     this.ctx = new AC();
     await Promise.all(['start', 'money', 'none', 's11'].map(async (n) => {
       try {
-        const r = await fetch(`/audio/${n}.wav`);
+        const r = await fetch(new URL(`audio/${n}.wav`, document.baseURI));
         const ab = await r.arrayBuffer();
         this.buffers[n] = await this.ctx.decodeAudioData(ab);
       } catch (e) { /* 忽略音频加载失败 */ }

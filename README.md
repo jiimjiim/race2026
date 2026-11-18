@@ -34,7 +34,7 @@ npm run build:exe
 
 ## 开发说明
 
-项目主要借助 AI 完成：程序主体（游戏逻辑、界面与比赛流程）由 DeepSeek V4.1 Flash 1017 完成，场景与车辆模型由 Gemini 4 Hydrogen 搭建。我负责提需求、验收和反复试玩调整；有不尽如人意的地方，多半是我没描述清楚。
+程序主体（游戏逻辑、界面与比赛流程）由 DeepSeek V4.1 Flash 1017 完成，场景与车辆模型由 Gemini 4 Hydrogen 搭建。
 
 ## 版权与素材
 

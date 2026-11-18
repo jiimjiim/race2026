@@ -1,4 +1,5 @@
 // 音效：原版 wav（start / money）+ WebAudio 合成引擎声与菜单 BGM
+const BGM_LEVEL = 0.5;
 class AudioMan {
   constructor() {
     this.ctx = null;
@@ -14,7 +15,7 @@ class AudioMan {
     this.ctx = new AC();
     await Promise.all(['start', 'money', 'none', 's11'].map(async (n) => {
       try {
-        const r = await fetch(new URL(`audio/${n}.wav`, document.baseURI));
+        const r = await fetch(`${import.meta.env.BASE_URL}audio/${n}.wav`);
         const ab = await r.arrayBuffer();
         this.buffers[n] = await this.ctx.decodeAudioData(ab);
       } catch (e) { /* 忽略音频加载失败 */ }
@@ -35,7 +36,7 @@ class AudioMan {
     this.bgmWanted = true;
     if (!this.ctx || this.muted) return;
     if (this.bgm) {
-      this.bgm.master.gain.setTargetAtTime(0.12, this.ctx.currentTime, 0.3);
+      this.bgm.master.gain.setTargetAtTime(BGM_LEVEL, this.ctx.currentTime, 0.3);
       return;
     }
     const ctx = this.ctx;
@@ -45,7 +46,7 @@ class AudioMan {
     lp.type = 'lowpass';
     lp.frequency.value = 3000;
     master.connect(lp).connect(ctx.destination);
-    master.gain.setTargetAtTime(0.12, ctx.currentTime, 0.6);
+    master.gain.setTargetAtTime(BGM_LEVEL, ctx.currentTime, 0.6);
     this.bgm = { master, step: 0, next: ctx.currentTime + 0.15, timer: null };
     this.bgm.timer = setInterval(() => this.bgmTick(), 90);
     this.bgmTick();
@@ -157,7 +158,7 @@ class AudioMan {
   setMuted(m) {
     this.muted = m;
     localStorage.setItem('race2026_muted', m ? '1' : '0');
-    if (this.bgm) this.bgm.master.gain.setTargetAtTime(m ? 0 : 0.12, this.ctx.currentTime, 0.1);
+    if (this.bgm) this.bgm.master.gain.setTargetAtTime(m ? 0 : BGM_LEVEL, this.ctx.currentTime, 0.1);
     if (m) this.stopEngine();
     else if (this.bgmWanted) this.startBgm();
   }

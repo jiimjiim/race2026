@@ -1,6 +1,9 @@
 import { audio } from './audio.js';
 import { ORIG_ASSETS } from './orig2001_assets.js';
 
+const IS_TOUCH = matchMedia('(pointer: coarse)').matches;
+const RACE_HINT = IS_TOUCH ? '按住右下角「加速」冲线' : '按 ← 键向左侧冲线';
+
 const RIVAL_DEFS = [
   { name: '法拉利车队', model: '2001 原版顶配', car: 'car1', targetTime: 1.74 },
   { name: '宝马车队',   model: '2001 原版顶配', car: 'car2', targetTime: 1.82 },
@@ -617,7 +620,7 @@ export class Retro2001Race {
     this.$lamp.src = ORIG_ASSETS.redLight;
     delete this.$lamp.dataset.go;
     this.$spd.textContent = '0';
-    this.$clock.textContent = '按 ← 键向左侧冲线';
+    this.$clock.textContent = RACE_HINT;
     this.lastTs = performance.now();
     this.startSrc = audio.play('start', 0.9);
     this.drawTrack();
@@ -640,8 +643,9 @@ export class Retro2001Race {
       <div style="display:flex;align-items:center;justify-content:center;gap:14px;padding-top:6px;font-size:13px;">
         <img src="${ORIG_ASSETS.kmh}" style="width:28px;height:28px;">
         <span><b id="r2Spd" style="font-weight:normal;">0</b> &nbsp;公里/小时</span>
-        <span id="r2Clock" style="margin-left:16px;color:#222;">按 ← 键向左侧冲线</span>
+        <span id="r2Clock" style="margin-left:16px;color:#222;">${RACE_HINT}</span>
       </div>
+      ${IS_TOUCH ? '<button id="r2Throttle" class="r2-touch">加速</button>' : ''}
     `;
 
     this.$lamp = this.$body.querySelector('#r2Lamp');
@@ -664,6 +668,30 @@ export class Retro2001Race {
     this.cars = laneRows;
     this.playerCar = laneRows[2];
     this.falseStarts = 0;
+
+    const touchBtn = this.$body.querySelector('#r2Throttle');
+    if (touchBtn) {
+      const press = (e) => {
+        e.preventDefault();
+        touchBtn.setPointerCapture?.(e.pointerId);
+        touchBtn.classList.add('pressed');
+        if (this.$overlay.style.display !== 'none') return;
+        if (this.racePhase === 'countdown') {
+          this.handleFalseStart();
+          return;
+        }
+        if (this.racePhase === 'running') this.throttle = true;
+      };
+      const release = () => {
+        touchBtn.classList.remove('pressed');
+        this.throttle = false;
+      };
+      touchBtn.addEventListener('pointerdown', press);
+      touchBtn.addEventListener('pointerup', release);
+      touchBtn.addEventListener('pointercancel', release);
+      touchBtn.addEventListener('lostpointercapture', release);
+      touchBtn.addEventListener('contextmenu', (e) => e.preventDefault());
+    }
 
     this.resetStartSequence();
     this.loop = (now) => {

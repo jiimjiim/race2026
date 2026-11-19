@@ -801,3 +801,134 @@ main#view::before {
   75% { opacity: 0.92; transform: scale(1.04); }
   100% { opacity: 1; transform: scale(1.08); }
 }
+
+/* ---------- touch controls ---------- */
+.touch-throttle {
+  position: absolute; right: 16px; bottom: 16px;
+  width: 96px; height: 96px; border-radius: 50%;
+  display: none; place-items: center;
+  font-family: var(--mono); font-size: 21px; color: #3a2a00;
+  background: rgba(255, 216, 94, .92);
+  border: 3px solid rgba(0, 0, 0, .55);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, .35), 0 0 26px rgba(255, 216, 94, .35);
+  pointer-events: auto; touch-action: none;
+  user-select: none; -webkit-user-select: none;
+  z-index: 5;
+}
+body.touch .race-wrap .touch-throttle { display: grid; }
+.touch-throttle.pressed {
+  transform: translateY(3px);
+  background: #ffd85e;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, .35), 0 0 30px rgba(255, 216, 94, .5);
+}
+.race-hud .start-banner { z-index: 20; }
+.race-hud .results, .race-hud .race-dialog { z-index: 30; }
+
+.r2-touch {
+  position: absolute; right: 8px; bottom: 6px;
+  width: 76px; height: 46px;
+  display: none; place-items: center;
+  font-family: inherit; font-size: 14px; color: #000;
+  background: rgba(255, 216, 94, .95);
+  border: 2px outset #fff;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, .35);
+  touch-action: none; user-select: none;
+  z-index: 5;
+}
+body.touch .r2-touch { display: grid; }
+.r2-touch.pressed { background: #f0c020; border-style: inset; }
+
+/* ---------- mobile layout ---------- */
+body.mobile .win {
+  position: fixed; inset: 0;
+  width: auto; height: auto;
+  transform: none !important;
+  border: 0; box-shadow: none;
+}
+body.mobile .titlebar { display: none; }
+body.mobile header.top {
+  padding: 6px 10px 5px;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+body.mobile .logo-img { height: 38px; }
+body.mobile .tabs { flex: 1 1 100%; gap: 3px; }
+body.mobile .tabs button { flex: 1; font-size: 15px; padding: 8px 4px; }
+body.mobile .statusbar { font-size: 12px; gap: 10px; padding: 3px 10px; }
+body.mobile .statusbar #seasonLabel { display: none; }
+body.mobile main#view {
+  padding: 8px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+body.mobile .news { height: 30px; font-size: 13px; padding: 0 10px; }
+body.mobile .news-label { display: none; }
+
+body.mobile .info-grid,
+body.mobile .shop-grid,
+body.mobile .factory-grid { grid-template-columns: 1fr; height: auto; gap: 8px; }
+body.mobile .info-left { gap: 8px; }
+body.mobile .panel { padding: 10px 12px; }
+body.mobile .panel h3 { font-size: 16px; margin-bottom: 8px; }
+body.mobile .rules { font-size: 14px; padding-left: 18px; line-height: 1.6; }
+body.mobile .hint { font-size: 13px; }
+body.mobile .start-wrap { margin-top: 0; padding-top: 8px; gap: 8px; flex-wrap: wrap; }
+body.mobile .start-btn { font-size: 18px; padding: 10px 16px; }
+body.mobile .start-wrap .next-race { font-size: 14px; }
+body.mobile .preview-stage { flex: 0 0 130px; min-height: 110px; }
+body.mobile #infoStage { height: 130px !important; }
+
+body.mobile .cat-col { flex-direction: row; flex-wrap: wrap; gap: 4px; }
+body.mobile .cat-col .panel-title { flex-basis: 100%; padding: 0 0 4px; }
+body.mobile .cat-btn { flex: 1 1 30%; font-size: 14px; padding: 8px 4px; text-align: center; }
+body.mobile .item-list { max-height: 36vh; }
+body.mobile .item { font-size: 14px; padding: 6px 8px; }
+body.mobile .preview-name { font-size: 15px; }
+body.mobile .price-line { font-size: 16px; }
+body.mobile .price-line b { font-size: 18px; }
+body.mobile .desc { font-size: 14px; }
+
+body.mobile .part-grid { grid-template-columns: 1fr; gap: 8px; }
+body.mobile .part-cell { padding: 8px; }
+body.mobile .part-cell .pico { width: 38px; height: 38px; }
+body.mobile .stat-strip { flex-wrap: wrap; gap: 8px 14px; }
+body.mobile .shell-row { flex-wrap: wrap; }
+body.mobile .factory-grid > .preview .preview-stage { flex-basis: 130px; }
+
+body.mobile .about { height: auto; font-size: 15px; }
+body.mobile .about .cols { grid-template-columns: 1fr; gap: 8px; }
+
+body.mobile.racing header.top,
+body.mobile.racing .statusbar,
+body.mobile.racing .news { display: none; }
+body.mobile.racing main#view {
+  position: fixed; inset: 0;
+  padding: 0; overflow: hidden;
+  z-index: 40;
+}
+
+body.mobile .race-hud { font-size: 13px; }
+body.mobile .hud-top { top: 6px; left: 8px; right: 8px; gap: 6px; }
+body.mobile .hud-feed { min-width: 0; max-width: 150px; }
+body.mobile .hud-feed-row { font-size: 10px; padding: 2px 5px; }
+body.mobile .hud-feed-row .t { display: none; }
+body.mobile .hud-mid .race-title { font-size: 11px; }
+body.mobile .hud-mid .pos { font-size: 18px; }
+body.mobile .hud-ability { min-width: 0; max-width: 132px; padding: 5px 7px; }
+body.mobile .hud-ability .name { font-size: 12px; }
+body.mobile .hud-ability .desc { display: none; }
+body.mobile .lights-panel { padding: 5px 6px; gap: 4px; }
+body.mobile .light { width: 14px; height: 14px; }
+body.mobile .hud-bottom { left: 8px; right: 8px; bottom: 8px; gap: 8px; }
+body.mobile .hud-bottom > div[style*="170px"] { display: none; }
+body.mobile .speedo { padding: 4px 8px; gap: 5px; }
+body.mobile .speedo .num { font-size: 28px; }
+body.mobile .speedo .unit { font-size: 11px; }
+body.mobile .hud-msg { font-size: 18px; }
+body.mobile .start-banner .big { font-size: 24px; letter-spacing: 1px; }
+body.mobile .start-banner .small { font-size: 13px; }
+body.mobile .results .modal-box { width: min(560px, 94%); }
+body.mobile .modal-body { max-height: 64vh; }
+body.mobile .touch-throttle { width: 88px; height: 88px; right: 12px; bottom: 12px; font-size: 19px; }
+

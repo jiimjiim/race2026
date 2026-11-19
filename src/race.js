@@ -10,6 +10,10 @@ const darkMat = new MeshStandardMaterial({ color: 0x1a1a1c, roughness: 0.7 });
 const chromeMat = new MeshStandardMaterial({ color: 0xd8dade, roughness: 0.25, metalness: 0.9 });
 const LANES = [7.6, 3.8, 0, -3.8, -7.6];
 const PLAYER_LANE = 2;
+const IS_TOUCH = matchMedia('(pointer: coarse)').matches;
+const TOUCH_HINT = window.innerHeight > window.innerWidth
+  ? '建议横屏 · 绿灯亮起后按住右下角「加速」'
+  : '绿灯亮起后按住右下角「加速」按钮';
 
 function canvasTexture(w, h, draw) {
   const c = document.createElement('canvas');
@@ -227,8 +231,9 @@ export class Race {
         </div>
         <div class="start-banner" id="banner">
           <div class="big">START YOUR ENGINE!!!</div>
-          <div class="small">绿灯亮起后按住 ↑ 键加速</div>
+          <div class="small">${IS_TOUCH ? TOUCH_HINT : '绿灯亮起后按住 ↑ 键加速'}</div>
         </div>
+        <button class="touch-throttle" id="touchThrottle">加速</button>
         <div class="race-dialog" id="raceDialog">
           <div class="modal-box">
             <div class="titlebar"><span class="title">抢跑</span></div>
@@ -795,6 +800,31 @@ export class Race {
     window.addEventListener('keydown', this.onKeyDown);
     window.addEventListener('keyup', this.onKeyUp);
     window.addEventListener('blur', this.onBlur);
+
+    this.$throttle = this.wrap.querySelector('#touchThrottle');
+    if (this.$throttle) {
+      const el = this.$throttle;
+      const press = (e) => {
+        e.preventDefault();
+        el.setPointerCapture?.(e.pointerId);
+        el.classList.add('pressed');
+        if (this.phase === 'falsestart' || this.phase === 'finished') return;
+        if (this.phase === 'lights') {
+          this.triggerFalseStart();
+          return;
+        }
+        this.throttle = true;
+      };
+      const release = () => {
+        el.classList.remove('pressed');
+        this.throttle = false;
+      };
+      el.addEventListener('pointerdown', press);
+      el.addEventListener('pointerup', release);
+      el.addEventListener('pointercancel', release);
+      el.addEventListener('lostpointercapture', release);
+      el.addEventListener('contextmenu', (e) => e.preventDefault());
+    }
   }
 
   triggerFalseStart() {
@@ -992,7 +1022,7 @@ export class Race {
           this.$go.classList.add('show');
           this.$lights.forEach((l) => { l.classList.remove('on'); l.classList.add('go'); });
           if (this.gantryLights) this.gantryLights.forEach((m) => { m.color.setHex(0x38ff68); m.emissive.setHex(0x18e048); });
-          this.setMsg('GO！按住 ↑ 键全油冲刺！', 1.5);
+          this.setMsg(IS_TOUCH ? 'GO！按住右下角「加速」全油冲刺！' : 'GO！按住 ↑ 键全油冲刺！', 1.5);
           audio.blip(880, 0.25, 'square', 0.08);
           setTimeout(() => this.$go.classList.remove('show'), 2600);
           this.phase = 'running';

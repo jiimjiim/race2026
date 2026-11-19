@@ -13,6 +13,10 @@ const SAVE_VERSION = 6;
 const SLOT_OF = { shells: 'shell', engines: 'engine', fuels: 'fuel', tires: 'tire', accs: 'acc' };
 const $ = (sel) => document.querySelector(sel);
 
+const IS_TOUCH = matchMedia('(pointer: coarse)').matches;
+const IS_MOBILE = IS_TOUCH && (window.innerWidth <= 1024 || window.innerHeight <= 600);
+const HOLD_HINT = IS_MOBILE ? '按住右下角「加速」按钮' : '按住 ↑ 键';
+
 const defaultState = () => ({
   saveVersion: SAVE_VERSION,
   money: START_MONEY,
@@ -377,7 +381,7 @@ function renderInfo() {
           <p class="hint">${escapeHtml(s.story).replace(/\n/g, '<br>')}</p>
           ${rule ? `<p class="season-rule"><b>规则</b>：${rule}${chinaNeed ? ` <span class="rule-progress">(${state.chinaRaces || 0}/${chinaNeed}场)</span>` : ''}</p>` : ''}
           <ol class="rules">
-            <li>绿灯亮起后按住 ↑ 键手动加速</li>
+            <li>绿灯亮起后${HOLD_HINT}手动加速</li>
             <li>抢跑 3 次罚出（-800 元），资产 ≤ 0 淘汰</li>
             <li>本季主线 ${dist}m 前三名计分（10/6/4）</li>
           </ol>
@@ -435,7 +439,7 @@ function renderInfo() {
           </div>` : ''}
         <div class="preview-stage" id="infoStage" style="flex:none;height:170px;margin-top:8px">
         </div>
-        <p class="hint" style="margin-top:6px">进度 ${state.raceInSeason}/${RACES_PER_SEASON} ｜ 总冠军 ${state.championships} 次 ｜ 按住 ↑ 加速 · 被动技能</p>
+        <p class="hint" style="margin-top:6px">进度 ${state.raceInSeason}/${RACES_PER_SEASON} ｜ 总冠军 ${state.championships} 次 ｜ ${HOLD_HINT}加速 · 被动技能</p>
       </div>
     </div>`;
 
@@ -816,7 +820,7 @@ function renderFactory() {
           </div>
           ${setStatusBanner(state.equipped)}
           ${st.shell?.id === 's0_bmw_black' ? renderBmwPaintBox() : ''}
-          <p class="hint" style="margin-top:8px">选发动机自动适配燃料，绿灯亮起后按住 ↑ 加速</p>
+          <p class="hint" style="margin-top:8px">选发动机自动适配燃料，绿灯亮起后${HOLD_HINT}加速</p>
           <div style="display:flex;gap:10px;margin-top:10px">
             <button class="btn" id="goShop">去商店</button>
             <button class="btn primary" id="goRace">开始比赛</button>
@@ -942,7 +946,7 @@ function renderAbout() {
           <p>本作是它的非商业同人重置</p>
           <p class="dim">原版素材版权归原作者所有，仅作个人怀旧用途。</p>
           <hr />
-          <p>操作：<br>绿灯亮起后按住 ↑ 键全油加速<br>所有车壳技能自动按条件触发<br>抢跑 3 次 = 罚出 + 罚款 800 元</p>
+          <p>操作：<br>绿灯亮起后${HOLD_HINT}全油加速<br>所有车壳技能自动按条件触发<br>抢跑 3 次 = 罚出 + 罚款 800 元</p>
           <p>进度会自动保存在浏览器 localStorage。</p>
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
             <button class="btn" id="muteBtn">${audio.muted ? '打开声音' : '关闭声音'}</button>
@@ -1251,6 +1255,7 @@ async function tryStartRace(cup = null, customEquipped = null) {
   switchTab('info');
   tabButtons.forEach((b) => (b.disabled = true));
   $('#startRace')?.classList.add('hidden');
+  document.body.classList.add('racing');
 
   const raceIdx = state.raceInSeason;
   const aiTarget = cup ? cup.ai : (season().aiTargets?.[raceIdx] || null);
@@ -1347,6 +1352,7 @@ function awardFor(result) {
 }
 
 function finishRace(result) {
+  document.body.classList.remove('racing');
   const award = awardFor(result);
   state.money += award.prize - (award.fine || 0);
 
@@ -1454,11 +1460,13 @@ function allUltimateConquered() {
 function launchBackTo2001() {
   tabButtons.forEach((b) => (b.disabled = true));
   $('#startRace')?.classList.add('hidden');
+  document.body.classList.add('racing');
   race = new Retro2001Race($('#desktop'), {
     teamName: state.teamName,
     money: state.money,
     onComplete: async (res) => {
       race = null;
+      document.body.classList.remove('racing');
       updateChrome();
       switchTab('info');
       audio.startBgm();
@@ -1638,11 +1646,17 @@ if (IS_DESKTOP_APP) {
 function scaleWin() {
   const el = document.querySelector('.win');
   if (!el) return;
+  if (IS_MOBILE) {
+    el.style.transform = 'none';
+    return;
+  }
   const s = IS_DESKTOP_APP
     ? Math.min(window.innerWidth / 1180, window.innerHeight / 780)
     : Math.min(window.innerWidth / 1204, window.innerHeight / 804, 1);
   el.style.transform = `translate(-50%, -50%) scale(${s})`;
 }
+if (IS_TOUCH) document.body.classList.add('touch');
+if (IS_MOBILE) document.body.classList.add('mobile');
 window.addEventListener('resize', scaleWin);
 scaleWin();
 

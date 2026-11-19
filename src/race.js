@@ -10,7 +10,7 @@ const darkMat = new MeshStandardMaterial({ color: 0x1a1a1c, roughness: 0.7 });
 const chromeMat = new MeshStandardMaterial({ color: 0xd8dade, roughness: 0.25, metalness: 0.9 });
 const LANES = [7.6, 3.8, 0, -3.8, -7.6];
 const PLAYER_LANE = 2;
-const IS_TOUCH = matchMedia('(pointer: coarse)').matches;
+const IS_TOUCH = new URLSearchParams(location.search).has('android') || matchMedia('(pointer: coarse)').matches;
 const TOUCH_HINT = window.innerHeight > window.innerWidth
   ? '建议横屏 · 绿灯亮起后按住右下角「加速」'
   : '绿灯亮起后按住右下角「加速」按钮';

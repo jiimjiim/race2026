@@ -90,7 +90,6 @@ run(aapt2, [
   'link', '-o', baseApk,
   '-I', androidJar,
   '--manifest', path.join(androidDir, 'AndroidManifest.xml'),
-  '-A', assetsDir,
   resZip,
 ]);
 
@@ -118,7 +117,7 @@ const classFiles = [];
 fs.mkdirSync(dexDir, { recursive: true });
 run(java, ['-cp', d8Jar, 'com.android.tools.r8.D8', '--lib', androidJar, '--min-api', '23', '--output', dexDir, ...classFiles]);
 
-run(jar, ['--update', '--file', baseApk, '-C', dexDir, 'classes.dex']);
+run(jar, ['--update', '--file', baseApk, '-C', assetsDir, 'www', '-C', dexDir, 'classes.dex']);
 
 const aligned = path.join(buildDir, 'aligned.apk');
 run(zipalign, ['-f', '4', baseApk, aligned]);

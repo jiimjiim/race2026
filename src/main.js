@@ -13,7 +13,7 @@ const SAVE_VERSION = 6;
 const SLOT_OF = { shells: 'shell', engines: 'engine', fuels: 'fuel', tires: 'tire', accs: 'acc' };
 const $ = (sel) => document.querySelector(sel);
 
-const IS_TOUCH = matchMedia('(pointer: coarse)').matches;
+const IS_TOUCH = new URLSearchParams(location.search).has('android') || matchMedia('(pointer: coarse)').matches;
 const IS_MOBILE = IS_TOUCH && (window.innerWidth <= 1024 || window.innerHeight <= 600);
 const HOLD_HINT = IS_MOBILE ? '按住右下角「加速」按钮' : '按住 ↑ 键';
 

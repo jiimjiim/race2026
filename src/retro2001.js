@@ -1,7 +1,7 @@
 import { audio } from './audio.js';
 import { ORIG_ASSETS } from './orig2001_assets.js';
 
-const IS_TOUCH = matchMedia('(pointer: coarse)').matches;
+const IS_TOUCH = new URLSearchParams(location.search).has('android') || matchMedia('(pointer: coarse)').matches;
 const RACE_HINT = IS_TOUCH ? '按住右下角「加速」冲线' : '按 ← 键向左侧冲线';
 
 const RIVAL_DEFS = [

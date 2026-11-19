@@ -44,7 +44,7 @@ public class MainActivity extends Activity {
         webView.setBackgroundColor(Color.rgb(11, 50, 52));
         webView.setWebViewClient(new WebViewClient());
         setContentView(webView);
-        webView.loadUrl("http://127.0.0.1:" + server.getPort() + "/");
+        webView.loadUrl("http://127.0.0.1:" + server.getPort() + "/?android=1");
     }
 
     private void hideSystemUi() {

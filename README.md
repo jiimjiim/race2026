@@ -2,7 +2,7 @@
 
 一个业余时间用 Three.js 写的《汽车赛 II》同人重制。原版《汽车赛 II》是玉米公司 2001 年的作品，这个项目只是凭兴趣和回忆做的非官方版本，难免粗糙，请多包涵。感谢原作者授权使用原版素材。
 
-在线试玩：<https://race2026-9q8.pages.dev/>
+在线试玩：<https://race2026-9q8.pages.dev/>（桌面和手机浏览器都可以）
 
 玩法很简单：从 2001 年开始经营车队，买车壳、引擎、燃油、轮胎和配件，跑完 9 个赛季 54 场比赛和几届杯赛。比赛是手动加速的，绿灯亮起后按住加速键，抢跑会被罚款。
 
@@ -11,6 +11,8 @@
 ## 运行
 
 Windows 用户直接到 [Releases](https://github.com/jiimjiim/race2026/releases) 下载 `Race2026.exe`，双击即玩。它依赖系统的 WebView2 运行时，Win10/11 一般已自带。
+
+手机和 Android：直接打开在线版，或下载 Release 里的 `Race2026.apk`。手机建议横屏，比赛时按住右下角的「加速」按钮。
 
 从源码运行：
 
@@ -33,6 +35,14 @@ npm run build:exe
 ```
 
 产物是 `game/Race2026.exe`，单文件，用系统自带的 .NET Framework 编译器打包。
+
+## 构建 APK
+
+```
+npm run build:apk
+```
+
+需要 JDK 17+ 和 Android SDK（build-tools 与 platform），产物是 `game/Race2026.apk`。APK 使用本机调试证书签名，仅供侧载安装。
 
 ## 开发说明
 
